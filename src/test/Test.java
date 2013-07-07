@@ -14,15 +14,18 @@ public class Test {
 		t.test1();
 	}
 	
-	void test1() throws Exception {
-		SimpleLogWriter slw = new SimpleLogWriter("C:\\Users\\qrks\\Desktop\\3333.txt", true);
-		SimpleLogWriter slw2 = new SimpleLogWriter("C:\\Users\\qrks\\Desktop\\3333.txt", true);
+	void test1() {
+		SimpleLogWriter slw;
+		SimpleLogWriter slw2;
+		slw = new SimpleLogWriter("c:\\Users\\qrks\\Desktop\\3333.txt", true);
+		slw2 = new SimpleLogWriter("C:\\Users\\qrks\\Desktop\\3333.txt", true);
 		slw.log("这是我的logUitl！！！");
 		slw2.log("这是我的logUitl4！！！");
 		slw.log("这是我的logUitl2！！！");
 		slw2.log("这是我的logUitl5！！！");
 		slw.log("这是我的logUitl3！！！");
 		slw2.logBoth("这是我的logUitl6！！！");
+
 	}
 
 }

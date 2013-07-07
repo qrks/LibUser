@@ -2,17 +2,19 @@ package logUtil;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class SimpleLogWriter {
 
-	File logFile;
+	static File logFile;
 	boolean append;
 	static FileWriter fw;
 	static int byteCount=0;
-	Date dat = new java.util.Date();
-	String nextline = System.getProperty("line.separator");
+	static Date dat = new java.util.Date();
+	static String nextline = System.getProperty("line.separator");
 	
 	static {
     	Runtime runtime = Runtime.getRuntime();
@@ -32,26 +34,38 @@ public class SimpleLogWriter {
         });
 	}
 	
-	public SimpleLogWriter(String filePath,boolean append) throws Exception {
+	public SimpleLogWriter(String filePath,boolean append) {
 		logFile = new File(filePath);
-		initLogFile();
-		fw = new FileWriter(logFile,append);
+		try {
+			initLogFile();
+			fw = new FileWriter(logFile,append);  
+		} catch (Exception e) {
+			System.out.println("init LogFile failed");
+			e.printStackTrace();
+		}
+		
 	}
 	
-	public void log(String msg) throws Exception {
-		String line = formatMsg(msg);
-		fw.write(line);
-		byteCount += line.length();
-		checkFlush();
+	public void log(String msg) {
+		String line = "";
+		try {
+			line = formatMsg(msg);
+			fw.write(line);
+			byteCount += line.length();
+			checkFlush();
+		} catch (Exception e) {
+			System.out.println("log() error");
+			e.printStackTrace();
+		}
 	}
 	
 	//also print to Console
-	public void logBoth(String msg) throws Exception {
+	public void logBoth(String msg) {
 		log(msg);
 		System.out.println(msg);
 	}
 	
-	private String formatMsg(String msg) throws Exception {
+	private String formatMsg(String msg) throws UnsupportedEncodingException {
 		String line = getTimestmp() + " " + msg;
 		byte[] bs = (line+nextline).getBytes("GBK");
 		return new String(bs);
@@ -71,7 +85,7 @@ public class SimpleLogWriter {
 		return d1; 
 	}
 	
-	private void checkFlush() throws Exception {
+	private void checkFlush() throws IOException {
 		if(byteCount > 1024) {
 			fw.flush();
 			byteCount = 0;
