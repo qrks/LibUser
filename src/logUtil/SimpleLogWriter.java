@@ -39,11 +39,22 @@ public class SimpleLogWriter {
 	}
 	
 	public void log(String msg) throws Exception {
+		String line = formatMsg(msg);
+		fw.write(line);
+		byteCount += line.length();
+		checkFlush();
+	}
+	
+	//also print to Console
+	public void logBoth(String msg) throws Exception {
+		log(msg);
+		System.out.println(msg);
+	}
+	
+	private String formatMsg(String msg) throws Exception {
 		String line = getTimestmp() + " " + msg;
 		byte[] bs = (line+nextline).getBytes("GBK");
-		fw.write(new String(bs));
-		byteCount += bs.length;
-		checkFlush();
+		return new String(bs);
 	}
 	
 	private String getThreadInfo() {
